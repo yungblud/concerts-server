@@ -15,7 +15,7 @@ model User {
   email          String                @unique
   password       String?
   connected_sns  String?
-  is_staff       Boolean
+  is_staff       Boolean               @default(false)
   liked_concerts LikedConcertsOnUser[]
   created_at     DateTime              @default(now())
 }
