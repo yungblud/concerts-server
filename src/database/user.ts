@@ -2,7 +2,7 @@ import User from "../models/User"
 import { UserConnectedSNSSchemaType } from "../schema/user"
 import { appPrisma } from "./prismaInstance"
 
-export const getUserById = async (id: string) => {
+export const getUserById = async (id: string): Promise<User | null> => {
     const data = await appPrisma.user.findUnique({
         where: {
             id
@@ -26,10 +26,13 @@ export const getUserById = async (id: string) => {
         'created_at': data.created_at
     })
 
-    return user.serialize()
+    return user
 }
 
-export const createUser = async (params: {email: string, password?: string, connected_sns: UserConnectedSNSSchemaType}) => {
+export const createUser =
+    async (
+        params: {email: string, password?: string, connected_sns: UserConnectedSNSSchemaType}
+    ): Promise<User | null> => {
     const {
         email,
         password,
@@ -53,5 +56,5 @@ export const createUser = async (params: {email: string, password?: string, conn
         'created_at': data.created_at
     })
 
-    return user.serialize()
+    return user
 }
