@@ -1,0 +1,96 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String                @id @default(uuid())
+  email          String                @unique
+  password       String?
+  connected_sns  String?
+  is_staff       Boolean
+  liked_concerts LikedConcertsOnUser[]
+  created_at     DateTime              @default(now())
+}
+
+model Concert {
+  id                  String                    @id @default(uuid())
+  title               String
+  description         String?
+  concert_date        DateTime
+  concert_posters     ConcertPostersOnConcert[]
+  liked_users         LikedConcertsOnUser[]
+  artists             ArtistsOnConcert[]
+  ticket_seller_infos TicketSellerInfo[]
+  created_at          DateTime                  @default(now())
+}
+
+model ConcertPoster {
+  id         String                    @id @default(uuid())
+  img_url    String
+  concerts   ConcertPostersOnConcert[]
+  created_at DateTime                  @default(now())
+}
+
+model ConcertPostersOnConcert {
+  concert           Concert       @relation(fields: [concert_id], references: [id])
+  concert_id        String // relation scalar field (used in the `@relation` attribute above)
+  concert_poster    ConcertPoster @relation(fields: [concert_poster_id], references: [id])
+  concert_poster_id String // relation scalar field (used in the `@relation` attribute above)
+  created_at        DateTime      @default(now())
+
+  @@id([concert_id, concert_poster_id])
+}
+
+model LikedConcertsOnUser {
+  user             User     @relation(fields: [user_id], references: [id])
+  user_id          String
+  liked_concert    Concert  @relation(fields: [liked_concert_id], references: [id])
+  liked_concert_id String
+  created_at       DateTime @default(now())
+
+  @@id([user_id, liked_concert_id])
+}
+
+model Artist {
+  id         String             @id @default(uuid())
+  name       String
+  concerts   ArtistsOnConcert[]
+  created_at DateTime           @default(now())
+}
+
+model ArtistsOnConcert {
+  concert    Concert  @relation(fields: [concert_id], references: [id])
+  concert_id String
+  artist     Artist   @relation(fields: [artist_id], references: [id])
+  artist_id  String
+  created_at DateTime @default(now())
+
+  @@id([concert_id, artist_id])
+}
+
+model Ticket {
+  id                    String           @id @default(uuid())
+  title                 String
+  price                 Float
+  currency              String
+  ticket_seller_info_id String
+  ticket_seller_info    TicketSellerInfo @relation(fields: [ticket_seller_info_id], references: [id])
+  created_at            DateTime         @default(now())
+}
+
+model TicketSellerInfo {
+  id         String   @id @default(uuid())
+  url        String
+  tickets    Ticket[]
+  concert_id String
+  concert    Concert  @relation(fields: [concert_id], references: [id])
+  created_at DateTime @default(now())
+}
