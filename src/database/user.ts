@@ -48,6 +48,33 @@ export const getUserByEmail = async (email: string) => {
     return user
 }
 
+export const getUserAuthInfoByEmail = async (email: string) => {
+    const data = await appPrisma.user.findUnique({
+        where: {
+            email
+        },
+        select: {
+            password: true,
+            password_salt: true,
+            email: true,
+            id: true,
+            created_at: true
+        }
+    })
+
+    if (!data) return null
+
+    const user = new User({
+        'id': data.id,
+        'email': data.email,
+        'created_at': data.created_at,
+        'password': data.password,
+        'password_salt': data.password_salt,
+        is_staff: false
+    })
+    return user
+}
+
 export const createUser =
     async (
         params: {email: string, password?: string, password_salt?: string, connected_sns: UserConnectedSNSSchemaType}

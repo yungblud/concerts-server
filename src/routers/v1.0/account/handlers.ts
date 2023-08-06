@@ -44,6 +44,7 @@ export const register: RouteHandler<{
           'email': serialized.email,
       })
     } catch (e) {
+      console.log(e)
       return rep.status(500).send({
         error: 'internal server error',
       })

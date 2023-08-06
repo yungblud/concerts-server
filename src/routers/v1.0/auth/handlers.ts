@@ -1,5 +1,5 @@
 import { RouteHandler } from "fastify"
-import { getUserByEmail } from "../../../database/user"
+import { getUserAuthInfoByEmail } from "../../../database/user"
 import { GenerateTokenBody, GenerateTokenReply } from "./types"
 import encryptPassword from "../../../lib/encryptPassword"
 import { generateAuthToken } from "../../../lib/authToken"
@@ -11,7 +11,7 @@ export const handleGenerateToken: RouteHandler<{
     const { email, password } = req.body
 
     try {
-        const user = await getUserByEmail(email)
+        const user = await getUserAuthInfoByEmail(email)
         if (!user) {
           return rep.status(404).send({
             error: 'not existing account'
