@@ -11,6 +11,7 @@ export const UserSchema = z.object({
     id: z.string(),
     email: z.string().email(),
     password: z.string().nullish(),
+    password_salt: z.string().nullish(),
     connected_sns: UserConnectedSNSSchema,
     is_staff: z.boolean(),
     created_at: z.date()

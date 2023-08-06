@@ -4,3 +4,8 @@ export interface GenerateTokenBody {
     password?: string
 }
 
+export type GenerateTokenReply = {
+    authToken: string
+} | {
+    error: string
+}
