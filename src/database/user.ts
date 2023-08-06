@@ -50,12 +50,13 @@ export const getUserByEmail = async (email: string) => {
 
 export const createUser =
     async (
-        params: {email: string, password?: string, connected_sns: UserConnectedSNSSchemaType}
+        params: {email: string, password?: string, password_salt?: string, connected_sns: UserConnectedSNSSchemaType}
     ): Promise<User | null> => {
     const {
         email,
         password,
-        connected_sns
+        connected_sns,
+        password_salt
     } = params
     const data = await appPrisma.user.create({
         'data': {
@@ -63,6 +64,7 @@ export const createUser =
             password,
             connected_sns,
             'is_staff': false,
+            password_salt
         }
     })
 
