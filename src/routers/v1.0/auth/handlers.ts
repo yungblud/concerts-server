@@ -1,20 +1,15 @@
 import { RouteHandler } from "fastify"
-import { RegisterAccountBody, RegisterAccountReply } from "./types"
-import { createUser } from "../../../database/user"
+import { createUser, getUserByEmail } from "../../../database/user"
+import { GenerateTokenBody } from "./types"
 
-export const register: RouteHandler<{
-    Body: RegisterAccountBody
-    Reply: RegisterAccountReply
+export const handleGenerateToken: RouteHandler<{
+    Body: GenerateTokenBody
   }> = async (req, rep) => {
-    const { email, password, connected_sns } = req.body
+    const { email, password } = req.body
 
     try {
-      // todo: generate encrypted password
-        const user = await createUser({
-            email,
-            password,
-            connected_sns
-        })
+        // todo: validate user with email and password
+        const user = await getUserByEmail(email)
 
         const serialized = user?.serialize()
 

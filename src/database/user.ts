@@ -29,6 +29,25 @@ export const getUserById = async (id: string): Promise<User | null> => {
     return user
 }
 
+export const getUserByEmail = async (email: string) => {
+    const data = await appPrisma.user.findUnique({
+        where: {
+            email
+        }
+    })
+    if (!data) return null
+    const user = new User({
+        'id': data.id,
+        'email': data.email,
+        'is_staff': data.is_staff,
+        'password': null,
+        'connected_sns': data.connected_sns as UserConnectedSNSSchemaType,
+        'created_at': data.created_at
+    })
+
+    return user
+}
+
 export const createUser =
     async (
         params: {email: string, password?: string, connected_sns: UserConnectedSNSSchemaType}
