@@ -3,13 +3,27 @@ import { RegisterAccountBody, RegisterAccountReply } from './types'
 import { register } from './handlers'
 
 const accountRoutes: FastifyPluginCallback = (instance, opts, done) => {
-  instance.post<{
+  instance.route<{
     Body: RegisterAccountBody
     Reply: RegisterAccountReply
-  }>(
-    '/register',
-    register
-  )
+  }>({
+    method: ['POST'],
+    url: '/register',
+    handler: register,
+    schema: {
+      description: 'register account',
+      tags: ['account'],
+      summary: 'register account',
+      body: {
+        $ref: 'RegisterAccountBody'
+      },
+      response: {
+        201: {
+          $ref: 'RegisteredAccount'
+        }
+      }
+    }
+  })
   done()
 }
 

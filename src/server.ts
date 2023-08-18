@@ -19,6 +19,36 @@ async function run() {
         }
       }
     })
+    fastify.addSchema({
+      $id: 'RegisterAccountBody',
+      type: 'object',
+      properties: {
+        email: {
+          type: 'string'
+        },
+        password: {
+          type: 'string',
+          nullable: true
+        },
+        connected_sns: {
+          type: 'string',
+          enum: ['apple', 'facebook', 'twitter', 'google'],
+          nullable: true
+        }
+      }
+    })
+    fastify.addSchema({
+      $id: 'RegisteredAccount',
+      type: 'object',
+      properties: {
+        id: {
+          type: 'string'
+        },
+        email: {
+          type: 'string'
+        },
+      }
+    })
     await fastify.register(swagger, {
       swagger: {
         info: {

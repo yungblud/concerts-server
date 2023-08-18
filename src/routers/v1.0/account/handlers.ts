@@ -39,7 +39,7 @@ export const register: RouteHandler<{
           })
       }
 
-      return rep.status(200).send({
+      return rep.status(201).send({
           'id': serialized.id,
           'email': serialized.email,
       })
