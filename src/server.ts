@@ -1,17 +1,49 @@
 import Fastify from 'fastify'
 import apiV1Routes from './routers/v1.0/routes'
+import swagger from '@fastify/swagger'
+import swaggerUI from '@fastify/swagger-ui'
 
 const fastify = Fastify({
   logger: true
 })
 
-// Declare a route
-fastify.register(apiV1Routes, {'prefix': '/v1.0'})
-
 // Run the server!
-try {
-  fastify.listen({ port: 3000 })
-} catch (err) {
-  fastify.log.error(err)
-  process.exit(1)
+async function run() {
+  try {
+    fastify.addSchema({
+      $id: 'AuthToken',
+      type: 'object',
+      properties: {
+        authToken: {
+          type: 'string'
+        }
+      }
+    })
+    await fastify.register(swagger, {
+      swagger: {
+        info: {
+          title: 'Concerts API Swagger',
+          version: '1.0.0',
+        },
+        host: "localhost",
+        schemes: ["http", "https"],
+        consumes: ["application/json"],
+        produces: ["application/json"],
+      }
+    })
+    // register swagger UI
+    await fastify.register(swaggerUI, {
+      routePrefix: '/swagger',
+    })
+    // Declare a route
+    await fastify.register(apiV1Routes, {'prefix': '/v1.0'})
+    await fastify.ready()
+    fastify.swagger()
+    fastify.listen({ port: 3000 })
+  } catch (err) {
+    fastify.log.error(err)
+    process.exit(1)
+  }
 }
+
+run()

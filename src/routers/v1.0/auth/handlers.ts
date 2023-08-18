@@ -60,7 +60,7 @@ export const handleGenerateToken: RouteHandler<{
           id: user.getId()
         })
 
-        return rep.status(200).send({
+        return rep.status(201).send({
             authToken
         })
     } catch (e) {
