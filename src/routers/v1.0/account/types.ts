@@ -10,7 +10,13 @@ export interface RegisterAccountBody {
 }
 
 export type RegisterAccountReply =
-  | Pick<UserSchemaType, "id" | "email">
+  | {
+      user: Omit<
+        UserSchemaType,
+        "is_staff" | "password" | "password_salt" | "connected_sns"
+      >;
+      authToken: string;
+    }
   | {
       error: string;
     };

@@ -26,3 +26,12 @@ export function decodeAuthToken(token: string): JWTPayload | null {
     return null;
   }
 }
+
+export function generateRefreshToken(
+  payload: JWTPayload & { authToken: string },
+): string {
+  if (typeof jwtSecret === "undefined") {
+    throw new Error("no secret");
+  }
+  return jwt.sign(payload, jwtSecret);
+}

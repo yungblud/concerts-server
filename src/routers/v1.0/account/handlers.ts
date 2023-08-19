@@ -2,6 +2,11 @@ import { type RouteHandler } from "fastify";
 import { type RegisterAccountBody, type RegisterAccountReply } from "./types";
 import { createUser, getUserByEmail } from "../../../database/user";
 import encryptPassword from "../../../lib/encryptPassword";
+import {
+  generateAuthToken,
+  generateRefreshToken,
+} from "../../../lib/authToken";
+import { createRefreshToken } from "../../../database/refreshToken";
 
 export const register: RouteHandler<{
   Body: RegisterAccountBody;
@@ -34,17 +39,30 @@ export const register: RouteHandler<{
       password_salt: encryptedPassword?.salt,
     });
 
-    const serialized = user?.serialize();
-
-    if (serialized == null) {
+    if (user == null) {
       return await rep.status(500).send({
-        error: "serialize failed",
+        error: "create user failed",
       });
     }
 
+    const authToken = generateAuthToken({
+      email: user.getEmail(),
+      id: user.getId(),
+    });
+    const refreshToken = generateRefreshToken({
+      authToken,
+      email: user.getEmail(),
+      id: user.getId(),
+    });
+
+    await createRefreshToken({
+      userId: user.getId(),
+      token: refreshToken,
+    });
+
     return await rep.status(201).send({
-      id: serialized.id,
-      email: serialized.email,
+      user: user.serialize(),
+      authToken,
     });
   } catch (e) {
     console.log(e);

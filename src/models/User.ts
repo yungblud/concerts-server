@@ -6,6 +6,10 @@ export default class User {
     return this.data.id;
   }
 
+  public getEmail(): string {
+    return this.data.email;
+  }
+
   public getPassword(): string | undefined | null {
     return this.data.password;
   }
@@ -24,7 +28,14 @@ export default class User {
     return this.data.is_staff;
   }
 
-  public serialize(): UserSchemaType {
-    return this.data;
+  public serialize(): Omit<
+    UserSchemaType,
+    "is_staff" | "password" | "password_salt" | "connected_sns"
+  > {
+    return {
+      id: this.data.id,
+      email: this.data.email,
+      created_at: this.data.created_at,
+    };
   }
 }
