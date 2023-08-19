@@ -23,13 +23,13 @@ export const handleGenerateToken: RouteHandler<{
     const emailSignedUpUser =
       !isSNSUser && userSalt !== null && userSalt !== undefined;
 
-    if (emailSignedUpUser && password !== undefined) {
+    if (emailSignedUpUser && password === undefined) {
       return await rep.status(400).send({
         error: "password is not provided",
       });
     }
 
-    if (emailSignedUpUser && userSalt !== undefined) {
+    if (emailSignedUpUser && userSalt === undefined) {
       return await rep.status(403).send({
         error: "not existing salt",
       });
@@ -69,6 +69,7 @@ export const handleGenerateToken: RouteHandler<{
       authToken,
     });
   } catch (e) {
+    console.error(e);
     return await rep.status(500).send({
       error: "internal server error",
     });
