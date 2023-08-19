@@ -41,10 +41,21 @@ async function run(): Promise<void> {
       $id: "RegisteredAccount",
       type: "object",
       properties: {
-        id: {
-          type: "string",
+        user: {
+          type: "object",
+          properties: {
+            id: {
+              type: "string",
+            },
+            email: {
+              type: "string",
+            },
+            created_at: {
+              type: "string",
+            },
+          },
         },
-        email: {
+        authToken: {
           type: "string",
         },
       },
