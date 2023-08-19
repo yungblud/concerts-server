@@ -49,6 +49,21 @@ async function run() {
         },
       }
     })
+    fastify.addSchema({
+      $id: 'CreateConcertBody',
+      type: 'object',
+      properties: {
+        title: {
+          type: 'string'
+        },
+        description: {
+          type: 'string'
+        },
+        concert_date: {
+          type: 'string'
+        }
+      }
+    })
     await fastify.register(swagger, {
       swagger: {
         info: {

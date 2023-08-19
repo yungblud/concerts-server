@@ -14,6 +14,9 @@ export default class User {
     public isSNSUser(): boolean {
        return !!this.data.connected_sns
     }
+    public isStaffUesr(): boolean {
+        return this.data.is_staff
+    }
     public serialize(): UserSchemaType {
         return this.data
     }
