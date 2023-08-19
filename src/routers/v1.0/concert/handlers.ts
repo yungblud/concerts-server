@@ -11,7 +11,7 @@ export const handleCreateConcert: RouteHandler<{
 }> = async (req, rep) => {
   const validation = CreateConcertBodySchema.safeParse(req.body);
   if (!validation.success) {
-    return await rep.status(400).send({
+    return rep.status(400).send({
       error: "invalid data",
     });
   }
