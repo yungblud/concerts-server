@@ -11,9 +11,9 @@ const authRoutes: FastifyPluginCallback = (instance, opts, done) => {
     url: "/token",
     handler: handleGenerateToken,
     schema: {
-      description: "create auth token",
+      description: "create auth token (login)",
       tags: ["auth"],
-      summary: "create auth token",
+      summary: "create auth token (login)",
       body: {
         type: "object",
         properties: {

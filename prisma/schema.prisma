@@ -104,4 +104,5 @@ model RefreshToken {
   user    User   @relation(fields: [user_id], references: [id])
 
   created_at DateTime @default(now())
+  invalidation_date DateTime
 }

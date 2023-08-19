@@ -11,6 +11,8 @@ const concertRoutes: FastifyPluginCallback = (instance, opts, done) => {
     onRequest: handleOnRequestCreateConcert,
     handler: handleCreateConcert,
     schema: {
+      description: "create concert (admin permission)",
+      summary: "create concert (admin permission)",
       tags: ["concert"],
       body: {
         $ref: "CreateConcertBody",
