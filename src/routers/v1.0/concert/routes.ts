@@ -1,23 +1,23 @@
-import { FastifyPluginCallback } from 'fastify'
-import { CreateConcertBodyType } from './types'
-import { handleCreateConcert, handleOnRequestCreateConcert } from './handlers'
+import { type FastifyPluginCallback } from "fastify";
+import { type CreateConcertBodyType } from "./types";
+import { handleCreateConcert, handleOnRequestCreateConcert } from "./handlers";
 
 const concertRoutes: FastifyPluginCallback = (instance, opts, done) => {
   instance.route<{
-    Body: CreateConcertBodyType
+    Body: CreateConcertBodyType;
   }>({
-    'method': 'POST',
-    'url': '/',
+    method: "POST",
+    url: "/",
     onRequest: handleOnRequestCreateConcert,
     handler: handleCreateConcert,
     schema: {
-      'tags': ['concert'],
+      tags: ["concert"],
       body: {
-        $ref: 'CreateConcertBody'
-      }
-    }
-  })
-  done()
-}
+        $ref: "CreateConcertBody",
+      },
+    },
+  });
+  done();
+};
 
-export default concertRoutes
+export default concertRoutes;

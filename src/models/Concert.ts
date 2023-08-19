@@ -1,11 +1,9 @@
-import { ConcertSchemaType } from "../schema/concert";
+import { type ConcertSchemaType } from "../schema/concert";
 
 export default class Concert {
-    constructor(private data: ConcertSchemaType) {
+  constructor(private readonly data: ConcertSchemaType) {}
 
-    }
-
-    serialize(): ConcertSchemaType {
-        return this.data
-    }
+  serialize(): ConcertSchemaType {
+    return this.data;
+  }
 }

@@ -1,39 +1,39 @@
-import { FastifyPluginCallback } from 'fastify'
-import { GenerateTokenBody, GenerateTokenReply } from './types'
-import { handleGenerateToken } from './handlers'
+import { type FastifyPluginCallback } from "fastify";
+import { type GenerateTokenBody, type GenerateTokenReply } from "./types";
+import { handleGenerateToken } from "./handlers";
 
 const authRoutes: FastifyPluginCallback = (instance, opts, done) => {
   instance.route<{
-    Body: GenerateTokenBody
-    Reply: GenerateTokenReply
+    Body: GenerateTokenBody;
+    Reply: GenerateTokenReply;
   }>({
-    method: ['POST'],
-    url: '/token',
+    method: ["POST"],
+    url: "/token",
     handler: handleGenerateToken,
     schema: {
-      description: 'create auth token',
-      tags: ['auth'],
-      summary: 'create auth token',
+      description: "create auth token",
+      tags: ["auth"],
+      summary: "create auth token",
       body: {
-        type: 'object',
+        type: "object",
         properties: {
           email: {
-            type: 'string'
+            type: "string",
           },
           password: {
-            type: 'string'
-          }
-        }
+            type: "string",
+          },
+        },
       },
       response: {
         201: {
-          $ref: 'AuthToken',
-          description: 'Successful response',
-        }
-      }
-    }
-  })
-  done()
-}
+          $ref: "AuthToken",
+          description: "Successful response",
+        },
+      },
+    },
+  });
+  done();
+};
 
-export default authRoutes
+export default authRoutes;

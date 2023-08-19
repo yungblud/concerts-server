@@ -1,8 +1,8 @@
-import { ConcertPosterSchemaType } from "../schema/concertPoster";
+import { type ConcertPosterSchemaType } from "../schema/concertPoster";
 
 export default class ConcertPoster {
-    constructor(private data: ConcertPosterSchemaType) {}
-    serialize(): ConcertPosterSchemaType {
-        return this.data
-    }
+  constructor(private readonly data: ConcertPosterSchemaType) {}
+  serialize(): ConcertPosterSchemaType {
+    return this.data;
+  }
 }

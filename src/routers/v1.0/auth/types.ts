@@ -1,11 +1,12 @@
-
 export interface GenerateTokenBody {
-    email: string
-    password?: string
+  email: string;
+  password?: string;
 }
 
-export type GenerateTokenReply = {
-    authToken: string
-} | {
-    error: string
-}
+export type GenerateTokenReply =
+  | {
+      authToken: string;
+    }
+  | {
+      error: string;
+    };
