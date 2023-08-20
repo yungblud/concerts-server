@@ -1,5 +1,12 @@
 import { type RouteHandler } from "fastify";
-import { type RegisterAccountBody, type RegisterAccountReply } from "./types";
+import {
+  type CreateAccountAuthCodeBodyType,
+  RegisterAccountBodySchema,
+  type RegisterAccountBodyType,
+  type RegisterAccountReply,
+  CreateAccountAuthCodeBodySchema,
+  type CreateAccountAuthCodeReply,
+} from "./types";
 import { createUser, getUserByEmail } from "../../../database/user";
 import encryptPassword from "../../../lib/encryptPassword";
 import {
@@ -7,12 +14,37 @@ import {
   generateRefreshToken,
 } from "../../../lib/authToken";
 import { createRefreshToken } from "../../../database/refreshToken";
+import { sendAccountAuthCodeEmail } from "../../../lib/email";
+import { createAccountAuthCode } from "../../../database/accountAuthCode";
+
+export const createAccountAuthCodeHandler: RouteHandler<{
+  Body: CreateAccountAuthCodeBodyType;
+  Reply: CreateAccountAuthCodeReply;
+}> = async (req, rep) => {
+  const validation = CreateAccountAuthCodeBodySchema.safeParse(req.body);
+  if (!validation.success) {
+    return await rep.status(400).send({
+      error: "invalid body",
+    });
+  }
+  const { email } = validation.data;
+  const accountAuthCode = await createAccountAuthCode(email);
+  const authCode = accountAuthCode.getAuthCode();
+  await sendAccountAuthCodeEmail(email, authCode);
+  return await rep.status(200).send({});
+};
 
 export const register: RouteHandler<{
-  Body: RegisterAccountBody;
+  Body: RegisterAccountBodyType;
   Reply: RegisterAccountReply;
 }> = async (req, rep) => {
-  const { email, password, connected_sns: connectedSNS } = req.body;
+  const validation = RegisterAccountBodySchema.safeParse(req.body);
+  if (!validation.success) {
+    return await rep.status(400).send({
+      error: "invalid body",
+    });
+  }
+  const { email, password, connected_sns: connectedSNS } = validation.data;
 
   try {
     // check existing user by email
@@ -25,7 +57,7 @@ export const register: RouteHandler<{
 
     // generate encrypted password
     const encryptedPassword =
-      password !== undefined
+      password !== undefined && password !== null
         ? encryptPassword({
             plain: password,
             originalSalt: undefined,

@@ -1,13 +1,17 @@
 import {
-  type UserConnectedSNSSchemaType,
+  UserConnectedSNSSchema,
   type UserSchemaType,
 } from "../../../schema/user";
 
-export interface RegisterAccountBody {
-  email: string;
-  password?: string;
-  connected_sns?: UserConnectedSNSSchemaType;
-}
+import { z } from "zod";
+
+export const RegisterAccountBodySchema = z.object({
+  email: z.string(),
+  password: z.string().nullish(),
+  connected_sns: UserConnectedSNSSchema,
+});
+
+export type RegisterAccountBodyType = z.infer<typeof RegisterAccountBodySchema>;
 
 export type RegisterAccountReply =
   | {
@@ -20,3 +24,18 @@ export type RegisterAccountReply =
   | {
       error: string;
     };
+
+export const CreateAccountAuthCodeBodySchema = z.object({
+  email: z.string(),
+});
+
+export type CreateAccountAuthCodeBodyType = z.infer<
+  typeof CreateAccountAuthCodeBodySchema
+>;
+
+export type CreateAccountAuthCodeReply =
+  | {
+      error: string;
+    }
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  | {};

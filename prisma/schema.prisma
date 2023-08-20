@@ -103,6 +103,14 @@ model RefreshToken {
   user_id String @unique
   user    User   @relation(fields: [user_id], references: [id])
 
-  created_at DateTime @default(now())
+  created_at        DateTime @default(now())
+  invalidation_date DateTime
+}
+
+model AccountAuthCode {
+  id                String   @id @default(uuid())
+  email             String
+  auth_code         String
+  created_at        DateTime @default(now())
   invalidation_date DateTime
 }
