@@ -2,6 +2,9 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import jwtDecode from "jwt-decode";
 import { addMinutes } from "date-fns";
+import { getUserById } from "../database/user";
+import type User from "../models/User";
+import { type FastifyRequest } from "fastify";
 
 export interface JWTPayload {
   id: string;
@@ -49,4 +52,17 @@ export function generateRefreshToken(
     throw new Error("no secret");
   }
   return jwt.sign(payload, jwtSecret);
+}
+
+export async function getUserByAuthToken(token: string): Promise<User | null> {
+  const info = decodeAuthToken(token);
+  if (info == null) return null;
+  const user = await getUserById(info.id);
+  return user;
+}
+
+export function getAuthTokenFromRequest(
+  req: FastifyRequest,
+): string | undefined {
+  return req.headers.authorization;
 }

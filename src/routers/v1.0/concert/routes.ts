@@ -1,6 +1,7 @@
 import { type FastifyPluginCallback } from "fastify";
 import { type CreateConcertBodyType } from "./types";
-import { handleCreateConcert, handleOnRequestCreateConcert } from "./handlers";
+import { handleCreateConcert } from "./handlers";
+import { staffUserPermissionMiddleware } from "../../../lib/middlewares";
 
 const concertRoutes: FastifyPluginCallback = (instance, opts, done) => {
   instance.route<{
@@ -8,7 +9,7 @@ const concertRoutes: FastifyPluginCallback = (instance, opts, done) => {
   }>({
     method: "POST",
     url: "/",
-    onRequest: handleOnRequestCreateConcert,
+    onRequest: staffUserPermissionMiddleware,
     handler: handleCreateConcert,
     schema: {
       description: "create concert (admin permission)",
