@@ -15,7 +15,10 @@ import {
 } from "../../../lib/authToken";
 import { createRefreshToken } from "../../../database/refreshToken";
 import { sendAccountAuthCodeEmail } from "../../../lib/email";
-import { createAccountAuthCode } from "../../../database/accountAuthCode";
+import {
+  createAccountAuthCode,
+  getAccountAuthCodeByEmail,
+} from "../../../database/accountAuthCode";
 
 export const createAccountAuthCodeHandler: RouteHandler<{
   Body: CreateAccountAuthCodeBodyType;
@@ -31,10 +34,10 @@ export const createAccountAuthCodeHandler: RouteHandler<{
   const accountAuthCode = await createAccountAuthCode(email);
   const authCode = accountAuthCode.getAuthCode();
   await sendAccountAuthCodeEmail(email, authCode);
-  return await rep.status(200).send({});
+  return await rep.status(201).send({});
 };
 
-export const register: RouteHandler<{
+export const registerHandler: RouteHandler<{
   Body: RegisterAccountBodyType;
   Reply: RegisterAccountReply;
 }> = async (req, rep) => {
@@ -44,7 +47,12 @@ export const register: RouteHandler<{
       error: "invalid body",
     });
   }
-  const { email, password, connected_sns: connectedSNS } = validation.data;
+  const {
+    email,
+    password,
+    connected_sns: connectedSNS,
+    account_auth_code: bodyAccountAuthCode,
+  } = validation.data;
 
   try {
     // check existing user by email
@@ -52,6 +60,23 @@ export const register: RouteHandler<{
     if (existingUser != null) {
       return await rep.status(409).send({
         error: "already existing account",
+      });
+    }
+
+    const accountAuthCode = await getAccountAuthCodeByEmail(email);
+
+    if (accountAuthCode == null) {
+      return await rep.status(404).send({
+        error: "not found account auth code",
+      });
+    }
+
+    const isCorrectAccountAuthCode =
+      accountAuthCode.getAuthCode() === bodyAccountAuthCode;
+
+    if (!isCorrectAccountAuthCode) {
+      return await rep.status(403).send({
+        error: "not matching account auth code",
       });
     }
 

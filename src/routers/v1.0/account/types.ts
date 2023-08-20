@@ -9,6 +9,7 @@ export const RegisterAccountBodySchema = z.object({
   email: z.string(),
   password: z.string().nullish(),
   connected_sns: UserConnectedSNSSchema,
+  account_auth_code: z.string().length(6),
 });
 
 export type RegisterAccountBodyType = z.infer<typeof RegisterAccountBodySchema>;

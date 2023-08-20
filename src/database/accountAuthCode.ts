@@ -16,3 +16,17 @@ export const createAccountAuthCode = async (
 
   return new AccountAuthCode(data);
 };
+
+export const getAccountAuthCodeByEmail = async (
+  email: string,
+): Promise<AccountAuthCode | null> => {
+  const data = await appPrisma.accountAuthCode.findFirst({
+    where: {
+      email,
+    },
+  });
+
+  if (data == null) return null;
+
+  return new AccountAuthCode(data);
+};
