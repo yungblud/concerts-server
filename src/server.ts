@@ -78,6 +78,20 @@ async function run(): Promise<void> {
         },
       },
     });
+    fastify.addSchema({
+      $id: "CreateAccountAuthCodeBody",
+      type: "object",
+      properties: {
+        email: {
+          type: "string",
+        },
+      },
+    });
+    fastify.addSchema({
+      $id: "SendAccountAuthCodeResult",
+      type: "object",
+      properties: {},
+    });
     await fastify.register(swagger, {
       swagger: {
         info: {

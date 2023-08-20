@@ -5,7 +5,7 @@ import {
   type RegisterAccountBodyType,
   type RegisterAccountReply,
 } from "./types";
-import { register, createAccountAuthCodeHandler } from "./handlers";
+import { registerHandler, createAccountAuthCodeHandler } from "./handlers";
 
 const accountRoutes: FastifyPluginCallback = (instance, opts, done) => {
   instance.route<{
@@ -14,7 +14,7 @@ const accountRoutes: FastifyPluginCallback = (instance, opts, done) => {
   }>({
     method: ["POST"],
     url: "/register",
-    handler: register,
+    handler: registerHandler,
     schema: {
       description: "register account",
       tags: ["account"],
@@ -37,6 +37,19 @@ const accountRoutes: FastifyPluginCallback = (instance, opts, done) => {
     method: ["POST"],
     url: "/auth-code",
     handler: createAccountAuthCodeHandler,
+    schema: {
+      description: "create account auth code (register process)",
+      summary: "create account auth code (register process)",
+      tags: ["account"],
+      body: {
+        $ref: "CreateAccountAuthCodeBody",
+      },
+      response: {
+        201: {
+          $ref: "SendAccountAuthCodeResult",
+        },
+      },
+    },
   });
 
   done();
