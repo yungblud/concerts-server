@@ -2,7 +2,11 @@ import { type RouteHandler } from "fastify";
 import { getUserAuthInfoByEmail } from "../../../database/user";
 import { type GenerateTokenBody, type GenerateTokenReply } from "./types";
 import encryptPassword from "../../../lib/encryptPassword";
-import { generateAuthToken } from "../../../lib/authToken";
+import {
+  generateAuthToken,
+  generateRefreshToken,
+} from "../../../lib/authToken";
+import { createRefreshToken } from "../../../database/refreshToken";
 
 export const handleGenerateToken: RouteHandler<{
   Body: GenerateTokenBody;
@@ -65,8 +69,18 @@ export const handleGenerateToken: RouteHandler<{
       id: user.getId(),
     });
 
+    const refreshToken = await createRefreshToken({
+      userId: user.getId(),
+      token: generateRefreshToken({
+        email,
+        id: user.getId(),
+        authToken,
+      }),
+    });
+
     return await rep.status(201).send({
       authToken,
+      refreshToken: refreshToken.getToken(),
     });
   } catch (e) {
     console.error(e);

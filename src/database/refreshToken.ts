@@ -1,6 +1,6 @@
 import RefreshToken from "../models/RefreshToken";
 import { appPrisma } from "./prismaInstance";
-import dateFns from "date-fns";
+import { addDays } from "date-fns";
 
 export const createRefreshToken = async ({
   userId,
@@ -15,7 +15,7 @@ export const createRefreshToken = async ({
       user_id: userId,
       token,
       created_at: createdDate,
-      invalidation_date: dateFns.addDays(createdDate, 21),
+      invalidation_date: addDays(createdDate, 21),
     },
   });
 

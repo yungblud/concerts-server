@@ -17,6 +17,9 @@ async function run(): Promise<void> {
         authToken: {
           type: "string",
         },
+        refreshToken: {
+          type: "string",
+        },
       },
     });
     fastify.addSchema({

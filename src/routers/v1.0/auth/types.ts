@@ -6,6 +6,7 @@ export interface GenerateTokenBody {
 export type GenerateTokenReply =
   | {
       authToken: string;
+      refreshToken: string;
     }
   | {
       error: string;

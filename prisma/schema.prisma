@@ -98,7 +98,7 @@ model TicketSellerInfo {
 }
 
 model RefreshToken {
-  token String @unique
+  token String @db.Text
 
   user_id String @unique
   user    User   @relation(fields: [user_id], references: [id])
