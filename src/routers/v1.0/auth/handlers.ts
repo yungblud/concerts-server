@@ -6,7 +6,10 @@ import {
   generateAuthToken,
   generateRefreshToken,
 } from "../../../lib/authToken";
-import { createRefreshToken } from "../../../database/refreshToken";
+import {
+  createRefreshToken,
+  deleteRefreshTokenByUserId,
+} from "../../../database/refreshToken";
 
 export const handleGenerateToken: RouteHandler<{
   Body: GenerateTokenBody;
@@ -68,6 +71,8 @@ export const handleGenerateToken: RouteHandler<{
       email,
       id: user.getId(),
     });
+
+    await deleteRefreshTokenByUserId(user.getId());
 
     const refreshToken = await createRefreshToken({
       userId: user.getId(),

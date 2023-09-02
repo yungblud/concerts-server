@@ -68,7 +68,7 @@ export const authTokenMiddleware: onRequestHookHandler = async (
   }
 
   const { exp } = decoded;
-  const isExpired = isAfter(new Date(exp * 1000), new Date());
+  const isExpired = isAfter(new Date(), new Date(exp * 1000));
 
   if (isExpired) {
     return await rep.status(498).send({

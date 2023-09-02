@@ -23,3 +23,13 @@ export const createRefreshToken = async ({
 
   return refreshToken;
 };
+
+export const deleteRefreshTokenByUserId = async (
+  userId: string,
+): Promise<void> => {
+  await appPrisma.refreshToken.delete({
+    where: {
+      user_id: userId,
+    },
+  });
+};

@@ -13,7 +13,10 @@ import {
   generateAuthToken,
   generateRefreshToken,
 } from "../../../lib/authToken";
-import { createRefreshToken } from "../../../database/refreshToken";
+import {
+  createRefreshToken,
+  deleteRefreshTokenByUserId,
+} from "../../../database/refreshToken";
 import { sendAccountAuthCodeEmail } from "../../../lib/email";
 import {
   createAccountAuthCode,
@@ -111,6 +114,8 @@ export const registerHandler: RouteHandler<{
       email: user.getEmail(),
       id: user.getId(),
     });
+
+    await deleteRefreshTokenByUserId(user.getId());
 
     await createRefreshToken({
       userId: user.getId(),
