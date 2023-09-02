@@ -11,6 +11,21 @@ const fastify = Fastify({
 async function run(): Promise<void> {
   try {
     fastify.addSchema({
+      $id: "UserMe",
+      type: "object",
+      properties: {
+        id: {
+          type: "string",
+        },
+        email: {
+          type: "string",
+        },
+        created_at: {
+          type: "string",
+        },
+      },
+    });
+    fastify.addSchema({
       $id: "AuthToken",
       type: "object",
       properties: {

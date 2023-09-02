@@ -4,8 +4,11 @@ import {
   getAuthTokenFromRequest,
 } from "../../../lib/authToken";
 import { getUserById } from "../../../database/user";
+import { type HandleMeReplyType } from "./types";
 
-export const handleMe: RouteHandler = async (req, rep) => {
+export const handleMe: RouteHandler<{
+  Reply: HandleMeReplyType;
+}> = async (req, rep) => {
   const authToken = getAuthTokenFromRequest(req);
   if (authToken === undefined) {
     return await rep.status(403).send({

@@ -1,4 +1,5 @@
 import { type UserSchemaType } from "../schema/user";
+import { type UserSerialize } from "./types";
 
 export default class User {
   constructor(private readonly data: UserSchemaType) {}
@@ -28,10 +29,7 @@ export default class User {
     return this.data.is_staff;
   }
 
-  public serialize(): Omit<
-    UserSchemaType,
-    "is_staff" | "password" | "password_salt" | "connected_sns"
-  > {
+  public serialize(): UserSerialize {
     return {
       id: this.data.id,
       email: this.data.email,
